@@ -5,11 +5,11 @@ const GithubStrategy = require("passport-github2").Strategy;
 const passport = require("passport");
 require('dotenv').config();
 
-let GOOGLE_CLIENT_ID=process.env.GOOGLE_CLIENT_ID;
-let GOOGLE_CLIENT_SECRET=process.env.GOOGLE_CLIENT_SECRET;
+let GOOGLE_CLIENT_ID="705848789332-7cq7rn4ak98oodkb7cafhsoebf2kop3m.apps.googleusercontent.com";
+let GOOGLE_CLIENT_SECRET="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";
 
-let GITHUB_CLIENT_ID=process.env.GITHUB_CLIENT_ID;
-let GITHUB_CLIENT_SECRET=process.env.GITHUB_CLIENT_SECRET;
+let GITHUB_CLIENT_ID="582a0dfb9ca3f78e2acc";
+let GITHUB_CLIENT_SECRET="2ec074af7e43898831b7c7218daa697099101357";
 
 passport.use(
   new GoogleStrategy(
