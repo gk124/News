@@ -1,22 +1,49 @@
 
 import './App.css';
 
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import NavBar from './Components/NavBar';
 import News from './Components/News';
-import Headlines from './Components/Headlines';
+import Login from './Components/login';
 import LoadingBar from 'react-top-loading-bar'
 import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate
 } from "react-router-dom";
 
-// component class based, we can add member and methods and can access it with this
-//rcc -->short cut for class based component
 
-// export default class App extends Component {
   const App=()=>{
+
+    const [user,setUser]= useState(null);
+
+  useEffect(()=>{
+    const getUser=()=>{
+      fetch('http://localhost:5000/auth/login/success',{
+        method:'GET',
+        credentials:"include",
+        headers:{
+          Accept:"application/json",
+          "Content-Type":"application/json",
+          "Access-Control-Allow-Credentials":true,
+        },
+      }).then((response)=>{
+        if(response.status===200)
+          return response.json();
+        throw new Error("Authentication has been failed");
+      }).then((resObject)=>{
+        setUser(resObject.user);
+      }).catch((err)=>{
+        console.log(err);
+      })
+    }
+    getUser();
+  },[]);
+
+
+
+
   let page=6;
   let country="in";
   let appKey=process.env.REACT_APP_NEWS_API;
@@ -35,10 +62,11 @@ import {
           color='#f11946'
           progress={progress}
         />
-        <NavBar/>
-        <Headlines/>
+        <NavBar user={user}/>
+        {/* <Headlines/> */}
         <Routes>
-          <Route exact path="/" element={<News setProgress={setProgress} key="home" pageSize={page} country={country} ApKey={appKey} category={"general"}/>}/>
+          <Route path='/login' element={user? <Navigate to='/'/> : <Login />}/>
+          <Route exact path="/" element={user?<News setProgress={setProgress} key="home" pageSize={page} country={country} ApKey={appKey} category={"general"}/>: <Navigate to="/login"/>}/>
           <Route exact path="/business" element={<News setProgress={setProgress} key="business" pageSize={page} country={country} ApKey={appKey} category={"business"}/>}/>
           <Route exact path="/sport" element={<News setProgress={setProgress} key="sports" pageSize={page} country={country} ApKey={appKey} category={"sports"}/>}/>
           <Route exact path="/entertainment" element={<News setProgress={setProgress} key="entertainment" pageSize={page} country={country} ApKey={appKey} category={"entertainment"}/>}/>
